@@ -5,6 +5,7 @@ import { styles } from './styles';
 
 const LogoutModal = ({ isOpenModal, setIsOpenModal }) => {
    const navigation = useNavigation();
+
    return (
       <KeyboardAvoidingView behavior={'height'} style={{ flex: 1, position: 'absolute' }}>
          <Modal

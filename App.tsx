@@ -25,7 +25,7 @@ const App = observer(() => {
       // <GoogleOAuthProvider clientId='1076673518797-kaqm977mc6qeqpu7duqu115jqvt1n4ej.apps.googleusercontent.com'>
       <FacebookProvider appId='1759450831238442'>
          <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
                <Stack.Screen name='Login' component={LoginScreen} />
                <Stack.Screen name='Register' component={RegisterScreen} />
                <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />

@@ -1,22 +1,28 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView, Button } from 'react-native';
-import { observer } from 'mobx-react';
-import ChatContext from '../../../../context/ChatContext';
+import React, { useEffect, useState, useContext } from 'react';
 import { createAxios, getDataAPI } from '../../../../utils';
-import { MaterialIcons } from '@expo/vector-icons';
+import { observer } from 'mobx-react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { styles } from './styles';
+import ChatContext from '../../../../context/ChatContext';
+import { ListTopic, TopicChild } from '../../../../types/topic.type';
 import accountStore from '../../../../store/accountStore';
+import AppLoading from 'expo-app-loading';
 import CustomSelect from './Picker';
 
-const RandomDialog = observer(props => {
+interface DialogProps {
+   open: boolean;
+   onClose: () => void;
+}
+const RandomDialog = observer((props: DialogProps) => {
    const { open, onClose } = props;
-   const [selectTopic, setSelectTopic] = useState(1);
-   const [listTopic, setListTopic] = useState([]);
-   const [topicChild, setTopicChild] = useState([]);
-   const [selected, setSelected] = useState(null);
+   const [selectTopic, setSelectTopic] = useState<number | ''>(1);
+   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
+   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
+   const [selected, setSelected] = useState<TopicChild>(null);
 
    const account = accountStore?.account;
-   const { isRandoming, setIsRandoming, socket } = useContext(ChatContext);
 
+   const { isBeingRandom, setIsBeingRandom, socket } = useContext(ChatContext);
    const setAccount = () => {
       return accountStore?.setAccount;
    };
@@ -36,7 +42,7 @@ const RandomDialog = observer(props => {
 
    useEffect(() => {
       return () => {
-         if (selected !== null && socket) {
+         if (selected !== null) {
             const topicChildren = {
                userId: account.id,
                targetName: 'null',
@@ -64,7 +70,7 @@ const RandomDialog = observer(props => {
          });
    }, [selectTopic]);
 
-   const handleSelect = topicChild => {
+   const handleSelect = (topicChild: TopicChild) => {
       if (selected?.id === topicChild.id) {
          setSelected(null);
       } else {
@@ -74,7 +80,7 @@ const RandomDialog = observer(props => {
 
    const handleRandom = () => {
       if (selected !== null && socket) {
-         setIsRandoming(true);
+         setIsBeingRandom(true);
          const topicChildren = {
             userId: account.id,
             targetName: 'null',
@@ -91,7 +97,7 @@ const RandomDialog = observer(props => {
    };
 
    const handleCancel = () => {
-      setIsRandoming(false);
+      setIsBeingRandom(false);
       setSelected(null);
       if (selected !== null && socket) {
          const topicChildren = {
@@ -111,15 +117,33 @@ const RandomDialog = observer(props => {
    };
 
    return (
-      <Modal animationType='slide' transparent={true} visible={open}>
-         <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-               {isRandoming ? (
-                  <View style={styles.loadingContainer}>
-                     <Text style={styles.modalText}>Finding...</Text>
-                     <MaterialIcons name='agriculture' size={50} color='#fff' />
+      open && (
+         <View style={styles.container}>
+            <View style={styles.header}>
+               <Text style={styles.headerText}>LOOKING FOR A PARTNER</Text>
+               <Text style={styles.headerSubText}>New Conversation</Text>
+            </View>
+            {isBeingRandom ? (
+               <View style={styles.wrapLoading}>
+                  {/* <AnimatedLoader
+                  overlayColor='rgba(255,255,255,0.75)'
+                  animationStyle={styles.lottie}
+                  speed={1}
+               >
+                  <Text>Loading...</Text>
+               </AnimatedLoader> */}
+                  {/* <AppLoading
+                  startAsync={null}
+                  onFinish={() => setIsBeingRandom(false)}
+                  onError={console.warn}
+               /> */}
+                  <Text style={styles.loadingText}>Loading...</Text>
+               </View>
+            ) : (
+               <View style={styles.content}>
+                  <View style={styles.wrapTex}>
+                     <Text style={styles.text}>Please select Topic</Text>
                   </View>
-               ) : (
                   <ScrollView contentContainerStyle={styles.modalContent}>
                      <Text style={styles.modalText}>LOOKING FOR A PARTNER</Text>
                      <Text style={styles.modalText}>New Conversation</Text>
@@ -150,91 +174,11 @@ const RandomDialog = observer(props => {
                         </ScrollView>
                      </View>
                   </ScrollView>
-               )}
-               <View style={styles.buttonContainer}>
-                  <Button title='Cancel' onPress={handleCancel} />
-                  <Button disabled={isRandoming} title='Random' onPress={handleRandom} />
                </View>
-            </View>
+            )}
          </View>
-      </Modal>
+      )
    );
-});
-
-const styles = StyleSheet.create({
-   centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-   },
-   modalView: {
-      margin: 20,
-      backgroundColor: 'rgb(20, 27, 45)',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-         width: 0,
-         height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-   },
-   loadingContainer: {
-      alignItems: 'center',
-   },
-   modalContent: {
-      alignItems: 'center',
-   },
-   modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-      color: '#fff',
-   },
-   buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      width: '100%',
-      marginTop: 20,
-   },
-   selectedTopicItem: {
-      backgroundColor: 'lightblue',
-      padding: 10,
-      marginVertical: 5,
-      borderRadius: 5,
-   },
-   topicItem: {
-      padding: 10,
-      marginVertical: 5,
-      borderRadius: 5,
-      color: '#fff',
-      backgroundColor: '#798899',
-   },
-   disableButton: {
-      opacity: 0.7,
-   },
-   topicChild: {
-      maxHeight: 200,
-      width: '100%',
-   },
-   topicBox: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: 300,
-   },
-   selectInput: {
-      maxHeight: 50,
-      minWidth: 120,
-      color: '#000',
-      backgroundColor: '#fff',
-   },
-   chatNameBox: {
-      alignItems: 'center',
-      flexDirection: 'column',
-   },
 });
 
 export default RandomDialog;

@@ -89,7 +89,6 @@ const TopicView = observer(() => {
       }
    };
    const navigateToDetailTopic = (id: number) => {
-      console.log('🚀 ~ file: index.tsx:64 ~ navigateToDetailTopic ~ id:', id);
       // navigation.navigate(`/topic-detail`, id);
    };
 

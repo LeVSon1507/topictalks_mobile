@@ -9,16 +9,35 @@ import {
    ScrollView,
    ActivityIndicator,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from '../../../../store/accountStore';
 import HeaderBar from '../../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Entypo, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import ChatContext from '../../../../context/ChatContext';
+import RandomDialog from '../../chatComponents/RandomModal';
+import ChatProvider from '../../../../context/ChatProvider';
 
 const Message = observer(() => {
+   const {
+      message,
+      setMessage,
+      socket,
+      notification,
+      setNotification,
+      isBeingRandom,
+      setIsBeingRandom,
+      openRandom,
+      setOpenRandom,
+   } = useContext(ChatContext);
+
    const [isLoading, setIsLoading] = useState(false);
    const account = accountStore?.account;
+
+   const handleRandom = () => {
+      setOpenRandom(true);
+   };
 
    return (
       <View style={{ flex: 1, backgroundColor: '' }}>
@@ -27,9 +46,17 @@ const Message = observer(() => {
             <View style={{ backgroundColor: 'black', height: 20 }}></View>
             <View style={styles.titleMessageWrap}>
                <Text style={styles.primaryText}>Messages</Text>
-               <TouchableOpacity style={styles.chatIconWrap}>
-                  <Ionicons name='chatbox' style={styles.chatIcon} />
-               </TouchableOpacity>
+               <View style={styles.iconGroup}>
+                  <TouchableOpacity style={styles.chatIconWrap}>
+                     <Ionicons name='people-outline' style={styles.chatIcon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.chatIconWrap}>
+                     <Ionicons name='chatbox' style={styles.chatIcon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.chatIconWrap} onPress={handleRandom}>
+                     <FontAwesome5 name='dice' style={styles.chatIcon} />
+                  </TouchableOpacity>
+               </View>
             </View>
             {isLoading ? (
                <View style={styles.indicator}>
@@ -46,6 +73,7 @@ const Message = observer(() => {
             <ScrollView style={{ paddingTop: 4, paddingHorizontal: 4, width: '100%' }}>
                <View style={{ width: '100%' }}>{/* content here */}</View>
             </ScrollView>
+            <RandomDialog open={true} onClose={() => setIsBeingRandom(false)} />
          </SafeAreaView>
       </View>
    );
@@ -98,10 +126,15 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: 'red',
    },
+   iconGroup: {
+      flexDirection: 'row',
+      paddingHorizontal: 10,
+   },
    chatIconWrap: {
       backgroundColor: 'white',
       padding: 8,
       borderRadius: 50,
+      marginLeft: 10,
    },
    chatIcon: {
       fontSize: 28,

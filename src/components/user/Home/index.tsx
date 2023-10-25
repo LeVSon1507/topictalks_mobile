@@ -6,6 +6,7 @@ import Topic from './Topic';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Message from './Message';
 import { MaterialIcons } from '@expo/vector-icons';
+import ContainerMessage from './Message/container';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,20 +27,22 @@ const HomeScreen = () => {
                   iconName = focused ? 'planet' : 'planet';
                } else if (route.name === 'Group') {
                   iconName = focused ? 'people-outline' : 'people-circle-outline';
+               } else if (route.name === 'Contact Us') {
+                  iconName = focused ? 'help-circle-outline' : 'help-circle-outline';
                }
-               // You can return any component that you like here!
-               return <Ionicons name={iconName} size={size} color={color} />;
+               return <Ionicons name={iconName} size={25} color={color} />;
             },
             tabBarActiveTintColor: 'tomato',
             tabBarInactiveTintColor: 'gray',
             headerShown: false,
          })}
       >
-         <Tab.Screen name='Message' component={Message} />
+         <Tab.Screen name='Message' component={ContainerMessage} />
          <Tab.Screen name='Topic' component={Topic} />
          <Tab.Screen name='Post' component={UserHome} />
          <Tab.Screen name='Group' component={UserHome} />
          <Tab.Screen name='Profile' component={UserHome} />
+         <Tab.Screen name='Contact Us' component={UserHome} />
       </Tab.Navigator>
    );
 };

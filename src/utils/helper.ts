@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import { ToastError } from './toastOptions';
-import { ToastAndroid } from 'react-native';
+import { Platform, ToastAndroid } from 'react-native';
 
-export const API_KEY = 'http://localhost:5000/api/v1';
-// export const API_KEY = 'http://10.0.2.2:5000/api/v1';
+export const API_KEY =
+   Platform.OS === 'android' ? 'http://10.0.2.2:3000/' : 'http://localhost:3000';
 
 export const APIKeyGPT = `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`;
 
