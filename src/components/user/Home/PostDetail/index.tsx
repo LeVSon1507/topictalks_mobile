@@ -5,15 +5,23 @@ import accountStore from '../../../../store/accountStore';
 import HeaderBar, { avatarUrlDemo } from '../../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
-import { fakePostData } from './data';
 import { IPost } from '../../../../utils';
 import dayjs from 'dayjs';
-import { useNavigation } from '@react-navigation/native';
+import { fakePostData } from '../Post/data';
+import { RouteProp, useRoute } from '@react-navigation/native';
 
 const tabs = ['Community Post', 'Friends Post', 'My Post'];
 
-const PostScreen = observer(() => {
-   const navigation = useNavigation();
+type ParamList = {
+   PostDetail: {
+      postData: IPost;
+   };
+};
+
+const PostDetailScreen = observer(({}) => {
+   const route = useRoute<RouteProp<ParamList, 'PostDetail'>>();
+
+   const { postData } = route.params || {};
 
    const account = accountStore.account;
 
@@ -21,10 +29,6 @@ const PostScreen = observer(() => {
 
    const handleChangeTab = tab => {
       setTabView(tab);
-   };
-
-   const goToPostDetail = (item: IPost): void => {
-      navigation.navigate('PostDetail', { postData: item });
    };
 
    const renderItem = (item: IPost) => {
@@ -46,18 +50,18 @@ const PostScreen = observer(() => {
                      </Text>
                   </View>
                   <View style={styles.itemPostWrap}>
-                     <TouchableOpacity
-                        onPress={() => goToPostDetail(item)}
-                        style={styles.itemPostImageWrap}
-                     >
+                     <View style={styles.itemPostImageWrap}>
                         <Image
                            style={styles.imagePost}
                            source={{
                               uri: item?.img_url,
                            }}
                         />
-                     </TouchableOpacity>
-
+                     </View>
+                     <Ionicons name={'heart-outline'} size={25} />
+                     <Ionicons name={'chatbubbles-outline'} size={25} />
+                     <Ionicons name={'share-social-outline'} size={25} />
+                     <Ionicons name={'arrow-redo-outline'} size={25} />
                      <Text style={styles.itemTitle}>{item?.title}</Text>
                      <Text style={styles.itemContent}>{item?.content}</Text>
                   </View>
@@ -71,33 +75,19 @@ const PostScreen = observer(() => {
       <View style={styles.container}>
          <HeaderBar account={account} />
          <View style={{ backgroundColor: 'black', height: 20 }}></View>
-         <View style={styles.tabViewWrap}>
-            {tabs.map((tab, index) => (
-               <TouchableOpacity
-                  key={index}
-                  style={[styles.tabWrap, tabView === index && { backgroundColor: '#C67C4E' }]}
-                  onPress={() => handleChangeTab(index)}
-               >
-                  <Text style={styles.tabText}>{tab}</Text>
-               </TouchableOpacity>
-            ))}
-         </View>
+
          <TouchableOpacity style={styles.titleWrap}>
             <Ionicons name={'planet'} size={35} />
-            <Text style={styles.title}>Post</Text>
+            <Text style={styles.title}>Post Detail</Text>
          </TouchableOpacity>
          {/* Post Content */}
-         <FlatList
-            data={fakePostData}
-            renderItem={({ item }) => renderItem(item)}
-            keyExtractor={item => item?.username}
-         />
-         {/* <ScrollView style={styles.contentWrap}></ScrollView> */}
+         {renderItem(postData)}
+         <ScrollView style={styles.contentWrap}></ScrollView>
       </View>
    );
 });
 
-export default PostScreen;
+export default PostDetailScreen;
 
 const styles = StyleSheet.create({
    postHeaderWrap: {

@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Message from './Message';
 import { MaterialIcons } from '@expo/vector-icons';
 import ContainerMessage from './Message/container';
+import PostScreen from './Post';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +38,9 @@ const HomeScreen = () => {
             headerShown: false,
          })}
       >
+         <Tab.Screen name='Post' component={PostScreen} />
          <Tab.Screen name='Message' component={ContainerMessage} />
          <Tab.Screen name='Topic' component={Topic} />
-         <Tab.Screen name='Post' component={UserHome} />
          <Tab.Screen name='Group' component={UserHome} />
          <Tab.Screen name='Profile' component={UserHome} />
          <Tab.Screen name='Contact Us' component={UserHome} />

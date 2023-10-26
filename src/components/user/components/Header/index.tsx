@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LogoutModal from '../../Home/Topic/LogoutModal';
 import { useNavigation } from '@react-navigation/native';
 
-const avatarUrlDemo =
+export const avatarUrlDemo =
    'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=';
 
 const HeaderBar = ({ account }) => {
@@ -12,7 +12,9 @@ const HeaderBar = ({ account }) => {
    const [modalVisible, setModalVisible] = useState<boolean>(false);
    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
-   const goToProfile = () => {};
+   const goToProfile = () => {
+      navigation.navigate('Home' as never);
+   };
 
    const logout = () => {
       setIsOpenModal(true);

@@ -14,6 +14,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { FacebookProvider } from 'react-facebook';
 import ChatProvider from './src/context/ChatProvider';
 import { register } from '@videosdk.live/react-native-sdk';
+import PostDetailScreen from './src/components/user/Home/PostDetail';
 //ios 1076673518797-vpn80s98mv0461ifp4aesjc2o2apnp7q.apps.googleusercontent.com
 //web 1076673518797-kaqm977mc6qeqpu7duqu115jqvt1n4ej.apps.googleusercontent.com
 const Stack = createStackNavigator();
@@ -25,9 +26,10 @@ const App = observer(() => {
       // <GoogleOAuthProvider clientId='1076673518797-kaqm977mc6qeqpu7duqu115jqvt1n4ej.apps.googleusercontent.com'>
       <FacebookProvider appId='1759450831238442'>
          <NavigationContainer>
-            <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+            <Stack.Navigator initialRouteName='PostDetail' screenOptions={{ headerShown: false }}>
                <Stack.Screen name='Login' component={LoginScreen} />
                <Stack.Screen name='Register' component={RegisterScreen} />
+               <Stack.Screen name='PostDetail' component={PostDetailScreen} />
                <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
                <Stack.Screen name='Admin' component={AdminController} />
             </Stack.Navigator>

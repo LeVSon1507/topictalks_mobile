@@ -6,7 +6,6 @@ import { styles } from './styles';
 import ChatContext from '../../../../context/ChatContext';
 import { ListTopic, TopicChild } from '../../../../types/topic.type';
 import accountStore from '../../../../store/accountStore';
-import AppLoading from 'expo-app-loading';
 import CustomSelect from './Picker';
 
 interface DialogProps {
@@ -31,7 +30,7 @@ const RandomDialog = observer((props: DialogProps) => {
    const axiosJWT = createAxios(accountJwt, setAccount);
 
    useEffect(() => {
-      getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+      getDataAPI(`/topic-parent/all`, account?.access_token, axiosJWT)
          .then(res => {
             setListTopic(res.data.data);
          })
@@ -60,7 +59,7 @@ const RandomDialog = observer((props: DialogProps) => {
    }, [open]);
 
    useEffect(() => {
-      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account?.access_token, axiosJWT)
          .then(res => {
             setTopicChild(res.data.data);
             setSelected(null);
@@ -141,15 +140,7 @@ const RandomDialog = observer((props: DialogProps) => {
                </View>
             ) : (
                <View style={styles.content}>
-                  <View style={styles.wrapTex}>
-                     <Text style={styles.text}>Please select Topic</Text>
-                  </View>
                   <ScrollView contentContainerStyle={styles.modalContent}>
-                     <Text style={styles.modalText}>LOOKING FOR A PARTNER</Text>
-                     <Text style={styles.modalText}>New Conversation</Text>
-                     <View style={styles.chatNameBox}>
-                        <Text>Please Choose Topic:</Text>
-                     </View>
                      <View style={styles.topicBox}>
                         <View>
                            <CustomSelect
