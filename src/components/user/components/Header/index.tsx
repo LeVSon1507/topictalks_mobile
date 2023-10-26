@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LogoutModal from '../../Home/Topic/LogoutModal';
 import { useNavigation } from '@react-navigation/native';
+import { HamburgerIcon, Menu, Pressable } from 'native-base';
 
 export const avatarUrlDemo =
    'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=';
@@ -33,38 +34,24 @@ const HeaderBar = ({ account }) => {
             </TouchableOpacity>
             <View style={styles.userNameWrap}>
                <Text style={styles.userName}>{account?.username}</Text>
-               <Image
-                  source={{ uri: account?.url_img || avatarUrlDemo }}
-                  alt='avatar'
-                  style={[styles.imageUserStyle, { borderRadius: 50 }]}
-               />
+               <Menu
+                  trigger={triggerProps => {
+                     return (
+                        <Pressable accessibilityLabel='More options menu' {...triggerProps}>
+                           <Image
+                              source={{ uri: account?.url_img || avatarUrlDemo }}
+                              alt='avatar'
+                              style={[styles.imageUserStyle, { borderRadius: 50 }]}
+                           />
+                        </Pressable>
+                     );
+                  }}
+               >
+                  <Menu.Item onPress={goToProfile}>Profile</Menu.Item>
+                  <Menu.Item onPress={logout}>Logout</Menu.Item>
+               </Menu>
             </View>
          </TouchableOpacity>
-         <Modal
-            animationType='fade'
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-               setModalVisible(!modalVisible);
-            }}
-         >
-            <View style={styles.centeredView}>
-               <View style={styles.modalView}>
-                  <TouchableOpacity
-                     style={styles.iconX}
-                     onPress={() => setModalVisible(!modalVisible)}
-                  >
-                     <Ionicons name='close-circle-outline' size={25} color='black' />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.profileOption} onPress={goToProfile}>
-                     <Text style={styles.modalText}>Profile</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.logoutOption} onPress={logout}>
-                     <Text style={[styles.modalText, { color: 'red' }]}>Logout</Text>
-                  </TouchableOpacity>
-               </View>
-            </View>
-         </Modal>
          <LogoutModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
       </>
    );

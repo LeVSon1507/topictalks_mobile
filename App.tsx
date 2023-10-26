@@ -20,21 +20,31 @@ import PostDetailScreen from './src/components/user/Home/PostDetail';
 const Stack = createStackNavigator();
 // Register the service video call
 // register();
+import { NativeBaseProvider } from 'native-base';
 
 const App = observer(() => {
    return (
       // <GoogleOAuthProvider clientId='1076673518797-kaqm977mc6qeqpu7duqu115jqvt1n4ej.apps.googleusercontent.com'>
-      <FacebookProvider appId='1759450831238442'>
-         <NavigationContainer>
-            <Stack.Navigator initialRouteName='PostDetail' screenOptions={{ headerShown: false }}>
-               <Stack.Screen name='Login' component={LoginScreen} />
-               <Stack.Screen name='Register' component={RegisterScreen} />
-               <Stack.Screen name='PostDetail' component={PostDetailScreen} />
-               <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
-               <Stack.Screen name='Admin' component={AdminController} />
-            </Stack.Navigator>
-         </NavigationContainer>
-      </FacebookProvider>
+      <NativeBaseProvider>
+         <FacebookProvider appId='1759450831238442'>
+            <NavigationContainer>
+               <Stack.Navigator
+                  initialRouteName='PostDetail'
+                  screenOptions={{ headerShown: false }}
+               >
+                  <Stack.Screen name='Login' component={LoginScreen} />
+                  <Stack.Screen name='Register' component={RegisterScreen} />
+                  <Stack.Screen name='PostDetail' component={PostDetailScreen} />
+                  <Stack.Screen
+                     name='Home'
+                     component={HomeScreen}
+                     options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name='Admin' component={AdminController} />
+               </Stack.Navigator>
+            </NavigationContainer>
+         </FacebookProvider>
+      </NativeBaseProvider>
       // </GoogleOAuthProvider>
    );
 });

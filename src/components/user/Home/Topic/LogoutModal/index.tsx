@@ -1,7 +1,8 @@
-import { KeyboardAvoidingView, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
+import { Box, HamburgerIcon, Menu } from 'native-base';
 
 const LogoutModal = ({ isOpenModal, setIsOpenModal }) => {
    const navigation = useNavigation();

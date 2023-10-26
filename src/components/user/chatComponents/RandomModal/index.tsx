@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { createAxios, getDataAPI } from '../../../../utils';
 import { observer } from 'mobx-react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import ChatContext from '../../../../context/ChatContext';
 import { ListTopic, TopicChild } from '../../../../types/topic.type';
 import accountStore from '../../../../store/accountStore';
 import CustomSelect from './Picker';
+import { Button, FormControl, Input, Modal } from 'native-base';
 
 interface DialogProps {
    open: boolean;
@@ -124,23 +125,13 @@ const RandomDialog = observer((props: DialogProps) => {
             </View>
             {isBeingRandom ? (
                <View style={styles.wrapLoading}>
-                  {/* <AnimatedLoader
-                  overlayColor='rgba(255,255,255,0.75)'
-                  animationStyle={styles.lottie}
-                  speed={1}
-               >
-                  <Text>Loading...</Text>
-               </AnimatedLoader> */}
-                  {/* <AppLoading
-                  startAsync={null}
-                  onFinish={() => setIsBeingRandom(false)}
-                  onError={console.warn}
-               /> */}
-                  <Text style={styles.loadingText}>Loading...</Text>
+                  <View style={styles.indicator}>
+                     <ActivityIndicator size='large' color='#43C651' />
+                  </View>
                </View>
             ) : (
                <View style={styles.content}>
-                  <ScrollView contentContainerStyle={styles.modalContent}>
+                  {/* <ScrollView contentContainerStyle={styles.modalContent}>
                      <View style={styles.topicBox}>
                         <View>
                            <CustomSelect
@@ -164,7 +155,43 @@ const RandomDialog = observer((props: DialogProps) => {
                            ))}
                         </ScrollView>
                      </View>
-                  </ScrollView>
+                  </ScrollView> */}
+                  <Modal isOpen={open} onClose={() => setOpen(false)} safeAreaTop={true}>
+                     <Modal.Content maxWidth='350'>
+                        <Modal.CloseButton />
+                        <Modal.Header>Contact Us</Modal.Header>
+                        <Modal.Body>
+                           <FormControl>
+                              <FormControl.Label>Name</FormControl.Label>
+                              <Input />
+                           </FormControl>
+                           <FormControl mt='3'>
+                              <FormControl.Label>Email</FormControl.Label>
+                              <Input />
+                           </FormControl>
+                        </Modal.Body>
+                        <Modal.Footer>
+                           <Button.Group space={2}>
+                              <Button
+                                 variant='ghost'
+                                 colorScheme='blueGray'
+                                 onPress={() => {
+                                    setOpen(false);
+                                 }}
+                              >
+                                 Cancel
+                              </Button>
+                              <Button
+                                 onPress={() => {
+                                    setOpen(false);
+                                 }}
+                              >
+                                 Save
+                              </Button>
+                           </Button.Group>
+                        </Modal.Footer>
+                     </Modal.Content>
+                  </Modal>
                </View>
             )}
          </View>

@@ -40,7 +40,7 @@ const Message = observer(() => {
    };
 
    return (
-      <View style={{ flex: 1, backgroundColor: '' }}>
+      <View style={{ flex: 1 }}>
          <SafeAreaView style={styles.container}>
             <HeaderBar account={account} />
             <View style={{ backgroundColor: 'black', height: 20 }}></View>

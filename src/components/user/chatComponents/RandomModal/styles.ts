@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+   indicator: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+   },
    container: {
       position: 'absolute',
       zIndex: 99,

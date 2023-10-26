@@ -10,8 +10,6 @@ import dayjs from 'dayjs';
 import { fakePostData } from '../Post/data';
 import { RouteProp, useRoute } from '@react-navigation/native';
 
-const tabs = ['Community Post', 'Friends Post', 'My Post'];
-
 type ParamList = {
    PostDetail: {
       postData: IPost;
@@ -25,49 +23,54 @@ const PostDetailScreen = observer(({}) => {
 
    const account = accountStore.account;
 
-   const [tabView, setTabView] = useState(0);
+   const handleLike = () => {};
 
-   const handleChangeTab = tab => {
-      setTabView(tab);
-   };
+   const handleComment = () => {};
+
+   const handleShare = () => {};
 
    const renderItem = (item: IPost) => {
       return (
-         tabView === 0 && (
-            <View style={styles.contentContainer}>
-               <View style={styles.itemContainer}>
-                  <View style={styles.postHeaderWrap}>
-                     <View style={styles.userNameWrap}>
-                        <Image
-                           source={{ uri: item?.avatar_url || avatarUrlDemo }}
-                           alt='avatar'
-                           style={[styles.imageUserStyle, { borderRadius: 50 }]}
-                        />
-                        <Text style={styles.userName}>{item?.username}</Text>
-                     </View>
-                     <Text style={styles.createTime}>
-                        {dayjs(item?.created_at)?.format('DD/MM/YYYY')}
-                     </Text>
+         <View style={styles.contentContainer}>
+            <View style={styles.itemContainer}>
+               <View style={styles.postHeaderWrap}>
+                  <View style={styles.userNameWrap}>
+                     <Image
+                        source={{ uri: item?.avatar_url || avatarUrlDemo }}
+                        alt='avatar'
+                        style={[styles.imageUserStyle, { borderRadius: 50 }]}
+                     />
+                     <Text style={styles.userName}>{item?.username}</Text>
                   </View>
-                  <View style={styles.itemPostWrap}>
-                     <View style={styles.itemPostImageWrap}>
-                        <Image
-                           style={styles.imagePost}
-                           source={{
-                              uri: item?.img_url,
-                           }}
-                        />
-                     </View>
-                     <Ionicons name={'heart-outline'} size={25} />
-                     <Ionicons name={'chatbubbles-outline'} size={25} />
-                     <Ionicons name={'share-social-outline'} size={25} />
-                     <Ionicons name={'arrow-redo-outline'} size={25} />
-                     <Text style={styles.itemTitle}>{item?.title}</Text>
-                     <Text style={styles.itemContent}>{item?.content}</Text>
+                  <Text style={styles.createTime}>
+                     {dayjs(item?.created_at)?.format('DD/MM/YYYY')}
+                  </Text>
+               </View>
+               <View style={styles.itemPostWrap}>
+                  <View style={styles.itemPostImageWrap}>
+                     <Image
+                        style={styles.imagePost}
+                        source={{
+                           uri: item?.img_url,
+                        }}
+                     />
                   </View>
+                  <View style={styles.iconGroupWrap}>
+                     <TouchableOpacity onPress={handleLike}>
+                        <Ionicons name={'heart-outline'} size={25} />
+                     </TouchableOpacity>
+                     <TouchableOpacity onPress={handleComment}>
+                        <Ionicons name={'chatbubbles-outline'} size={25} />
+                     </TouchableOpacity>
+                     <TouchableOpacity onPress={handleShare}>
+                        <Ionicons name={'arrow-redo-outline'} size={25} />
+                     </TouchableOpacity>
+                  </View>
+                  <Text style={styles.itemTitle}>{item?.title}</Text>
+                  <Text style={styles.itemContent}>{item?.content}</Text>
                </View>
             </View>
-         )
+         </View>
       );
    };
 
@@ -90,6 +93,11 @@ const PostDetailScreen = observer(({}) => {
 export default PostDetailScreen;
 
 const styles = StyleSheet.create({
+   iconGroupWrap: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+   },
    postHeaderWrap: {
       flexDirection: 'row',
       alignItems: 'center',
