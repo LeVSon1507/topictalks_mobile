@@ -28,10 +28,7 @@ const App = observer(() => {
       <NativeBaseProvider>
          <FacebookProvider appId='1759450831238442'>
             <NavigationContainer>
-               <Stack.Navigator
-                  initialRouteName='PostDetail'
-                  screenOptions={{ headerShown: false }}
-               >
+               <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
                   <Stack.Screen name='Login' component={LoginScreen} />
                   <Stack.Screen name='Register' component={RegisterScreen} />
                   <Stack.Screen name='PostDetail' component={PostDetailScreen} />

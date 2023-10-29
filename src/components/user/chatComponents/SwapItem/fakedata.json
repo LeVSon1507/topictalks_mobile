@@ -1,0 +1,41 @@
+{
+   "status": 200,
+   "desc": "OK",
+   "data": [
+      {
+         "conversationInfor": {
+            "id": 1,
+            "chatName": "123",
+            "isGroupChat": true,
+            "topicChildren": {
+               "createdAt": "2023-10-27T21:10:44.243268",
+               "updatedAt": "2023-10-27T21:10:44.243268",
+               "id": 1,
+               "topicChildrenName": "Exercise and workout regimens 1",
+               "image": "https://media.self.com/photos/6398b36c72eb56f726777d06/4:3/w_1920,c_limit/weekly-workout-schedule.jpeg"
+            },
+            "adminId": 2
+         },
+         "partnerDTO": [],
+         "isMember": "true"
+      },
+      {
+         "conversationInfor": {
+            "id": 2,
+            "chatName": "alo",
+            "isGroupChat": true,
+            "topicChildren": {
+               "createdAt": "2023-10-27T21:10:44.243268",
+               "updatedAt": "2023-10-27T21:10:44.243268",
+               "id": 1,
+               "topicChildrenName": "Exercise and workout regimens 1",
+               "image": "https://media.self.com/photos/6398b36c72eb56f726777d06/4:3/w_1920,c_limit/weekly-workout-schedule.jpeg"
+            },
+            "adminId": 2
+         },
+         "partnerDTO": [],
+         "isMember": "true"
+      }
+   ],
+   "success": true
+}

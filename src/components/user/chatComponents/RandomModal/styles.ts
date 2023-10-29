@@ -1,6 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+   selectWrap: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+   },
+   selectTopicChild: {
+      backgroundColor: 'gray',
+      padding: 12,
+      fontSize: 12,
+      width: 100,
+      textAlign: 'center',
+      marginHorizontal: 10,
+      color: 'white',
+   },
    indicator: {
       width: '100%',
       flexDirection: 'row',
@@ -19,15 +32,15 @@ export const styles = StyleSheet.create({
       color: 'white',
       transform: [{ translateX: -150 }, { translateY: -150 }],
    },
+
    header: {
-      backgroundColor: 'white',
       alignItems: 'center',
       borderRadius: 12,
       paddingVertical: 8,
    },
    headerText: {
       color: 'black',
-      fontSize: 20,
+      fontSize: 16,
    },
    headerSubText: {
       color: 'black',
@@ -36,6 +49,7 @@ export const styles = StyleSheet.create({
    wrapLoading: {
       justifyContent: 'center',
       alignItems: 'center',
+      height: 150,
    },
    loadingText: {
       color: 'white',

@@ -9,7 +9,7 @@ import {
    ScrollView,
    ActivityIndicator,
 } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from '../../../../store/accountStore';
 import HeaderBar from '../../components/Header';
@@ -18,6 +18,26 @@ import { Entypo, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import ChatContext from '../../../../context/ChatContext';
 import RandomDialog from '../../chatComponents/RandomModal';
 import ChatProvider from '../../../../context/ChatProvider';
+import chatStore from '../../../../store/chatStore';
+import { createAxios, getDataAPI } from '../../../../utils';
+import uiStore from '../../../../store/uiStore';
+import { IPartnerDTO, ListMesage } from '../../../../types/chat.type';
+import { SwapItem } from '../../chatComponents/SwapItem';
+
+const tabs = [
+   {
+      iconName: 'chatbox-outline',
+      name: 'Message',
+   },
+   {
+      iconName: 'person-outline',
+      name: 'Friends',
+   },
+   {
+      iconName: 'people-outline',
+      name: 'Groups',
+   },
+];
 
 const Message = observer(() => {
    const {
@@ -33,7 +53,66 @@ const Message = observer(() => {
    } = useContext(ChatContext);
 
    const [isLoading, setIsLoading] = useState(false);
+   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
+   const [tabView, setTabView] = useState(0);
+
+   const handleChangeTab = tab => {
+      setTabView(tab);
+   };
+   const listChats = chatStore?.chats;
    const account = accountStore?.account;
+   const accountJwt = account;
+   const setAccount = () => accountStore?.setAccount;
+   const axiosJWT = createAxios(accountJwt, setAccount);
+
+   const isActive = (chat: ListMesage) => {
+      const result = chat.partnerDTO.some(item => item?.active);
+      return result;
+   };
+
+   useEffect(() => {
+      uiStore?.setLoading(true);
+      getDataAPI(`/participant/${account?.id}/all`, account?.access_token, axiosJWT)
+         .then(res => {
+            chatStore?.setChats(res.data.data);
+            setSortChat(res.data.data);
+            uiStore?.setLoading(false);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+      return () => {
+         chatStore?.setSelectedChat(null);
+      };
+   }, []);
+
+   const setSelectedChat = (chat: ListMesage) => {
+      const newNotifi = notification.filter(
+         item => item.conversationId !== chat.conversationInfor.id
+      );
+      setNotification(newNotifi);
+      getDataAPI(
+         `/participant/uid=${account?.id}&&cid=${chat?.conversationInfor?.id}`,
+         account?.access_token,
+         axiosJWT
+      )
+         .then(res => {
+            chatStore?.setSelectedChat(res.data.data);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+   };
+
+   const imageUser = (partnerDTO: IPartnerDTO[]) => {
+      const image = partnerDTO.filter(item => item.id !== account.id).map(item => item.image);
+      return image.toString();
+   };
+
+   const partnerName = partner => {
+      const usernames = partner.filter(item => item.id !== account.id).map(item => item.username);
+      return usernames;
+   };
 
    const handleRandom = () => {
       setOpenRandom(true);
@@ -58,22 +137,41 @@ const Message = observer(() => {
                   </TouchableOpacity>
                </View>
             </View>
+            <View style={styles.tabViewWrap}>
+               {tabs.map((tab, index) => (
+                  <TouchableOpacity
+                     key={index}
+                     style={[styles.tabWrap, tabView === index && { backgroundColor: '#C67C4E' }]}
+                     onPress={() => handleChangeTab(index)}
+                  >
+                     <Ionicons name={tab.iconName} size={20} color={'white'} />
+                     <Text style={styles.tabText}>{tab.name}</Text>
+                  </TouchableOpacity>
+               ))}
+            </View>
             {isLoading ? (
                <View style={styles.indicator}>
                   <ActivityIndicator size='large' color='#43C651' />
                </View>
             ) : (
                <>
+                  {/* <MessageCard />
                   <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
-                  <MessageCard />
+                  <MessageCard /> */}
+                  <SwapItem
+                     isGroupTab={tabView === 2}
+                     listChats={listChats}
+                     partnerName={partnerName}
+                     imageUser={imageUser}
+                     setSelectedChat={setSelectedChat}
+                     isActive={isActive}
+                  />
                </>
             )}
             <ScrollView style={{ paddingTop: 4, paddingHorizontal: 4, width: '100%' }}>
                <View style={{ width: '100%' }}>{/* content here */}</View>
             </ScrollView>
-            <RandomDialog open={true} onClose={() => setIsBeingRandom(false)} />
+            <RandomDialog open={openRandom} />
          </SafeAreaView>
       </View>
    );
@@ -102,6 +200,22 @@ const MessageCard = () => {
 export default Message;
 
 const styles = StyleSheet.create({
+   tabViewWrap: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+   },
+   tabWrap: {
+      backgroundColor: '#313131',
+      padding: 12,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      margin: 8,
+      borderRadius: 12,
+   },
+   tabText: {
+      color: 'white',
+      fontWeight: '600',
+   },
    container: {
       flex: 1,
    },
@@ -141,8 +255,8 @@ const styles = StyleSheet.create({
       color: '#555',
    },
    primaryText: {
-      color: 'red',
-      fontSize: 16,
+      color: 'black',
+      fontSize: 24,
       fontWeight: 'bold',
       paddingBottom: 2,
    },

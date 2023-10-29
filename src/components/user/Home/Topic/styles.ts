@@ -27,22 +27,20 @@ export const styles = StyleSheet.create({
    searchAndImageWrap: {},
    imageHeaderBanner: {
       width: 316,
-      height: 150,
+      zIndex: 1,
       borderRadius: 8,
    },
    ImageHeaderBannerWrap: {
       justifyContent: 'center',
-      flex: 1,
       alignItems: 'center',
+      paddingBottom: 10,
    },
    searchInputWrap: {
-      backgroundColor: '#313131',
       borderRadius: 8,
       marginHorizontal: 30,
-      paddingLeft: 16,
-      marginVertical: 16,
-      paddingVertical: 8,
+      marginVertical: 12,
       alignItems: 'center',
+      justifyContent: 'center',
       flexDirection: 'row',
    },
    searchInput: {
@@ -54,7 +52,6 @@ export const styles = StyleSheet.create({
       paddingLeft: 4,
    },
    headerWrap: {
-      height: '35%',
       backgroundColor: 'black',
    },
 

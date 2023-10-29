@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-   View,
-   Text,
-   TextInput,
-   TouchableOpacity,
-   Image,
-   StyleSheet,
-   Alert,
-   Dimensions,
-} from 'react-native';
+import { Alert, Dimensions } from 'react-native';
 import axios from 'axios';
 import accountStore from '../../../store/accountStore';
 import { useNavigation } from '@react-navigation/native';
@@ -16,14 +7,20 @@ import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { API_KEY } from '../../../utils';
-import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import { observer } from 'mobx-react';
+import { styles } from './styles';
+import { Toast } from 'native-base';
+import { Image, View } from 'native-base';
+import FormLogin from './FormLogin';
 
 const LoginPage = observer(({}) => {
    const navigation = useNavigation();
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
-   const [showPass, setShowPass] = useState(true);
+   const [show, setShow] = useState(false);
+
+   const handleChangeUsername = text => setUsername(text);
+   const handleChangePassword = text => setPassword(text);
 
    const handleSignIn = e => {
       e.preventDefault();
@@ -34,23 +31,14 @@ const LoginPage = observer(({}) => {
       axios
          .post(`${API_KEY}/auth/authenticate`, user)
          .then(res => {
-            // showToastShort('Login Success!');
             accountStore?.setAccount(res.data);
             res.data.roles.includes('ROLE_ADMIN')
                ? navigation.navigate('Admin' as never)
                : navigation.navigate('Home' as never);
          })
          .catch(err => {
-            console.log(err);
-            // Toast.error('Invalidate UserName or Password!');
-            // alert('Invalidate UserName or Password!');
-            Alert.alert('Invalidate UserName or Password!', '', [
-               {
-                  text: 'Try Again',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-               },
-            ]);
+            console.log('🚀 ~ file: index.tsx:45 ~ handleSignIn ~ err:', err);
+            Toast.show({ description: 'Wrong UserName or Password!' });
          });
    };
 
@@ -102,6 +90,10 @@ const LoginPage = observer(({}) => {
 
    const screenWidth = Math.round(Dimensions.get('window').width);
 
+   const goToRegister = () => {
+      navigation.navigate('Register' as never);
+   };
+
    return (
       <View style={styles.container}>
          <Image
@@ -109,9 +101,7 @@ const LoginPage = observer(({}) => {
             source={require('../../../assets/images/carousel1.png')}
          />
          <View style={styles.mainView}>
-            <Image style={styles.logo} source={require('../../../assets/images/logo.png')} />
-            <Text style={styles.textLogin}>Login</Text>
-
+            {/* 
             <View style={[styles.passwordInputWrap]}>
                <MaterialIcons name='person' size={24} color={'#6c66d83'} />
                <TextInput
@@ -120,9 +110,9 @@ const LoginPage = observer(({}) => {
                   value={username}
                   placeholder='User Name'
                />
-            </View>
-            <View style={[styles.passwordInputWrap, { marginBottom: 20 }]}>
-               <MaterialIcons name='person' size={24} color={'#6c66d83'} />
+            </View> */}
+            {/* <View style={[styles.passwordInputWrap, { marginBottom: 20 }]}> */}
+            {/* <MaterialIcons name='person' size={24} color={'#6c66d83'} />
                <TextInput
                   style={styles.textInputPw}
                   onChangeText={text => setPassword(text)}
@@ -138,18 +128,24 @@ const LoginPage = observer(({}) => {
                         color={'#6c66d83'}
                      />
                   </TouchableOpacity>
-               )}
-            </View>
-            <View style={styles.buttonWrap}>
+               )} */}
+            {/* <View style={styles.buttonWrap}>
                <TouchableOpacity onPress={handleSignIn}>
                   <Text style={styles.button}>Login</Text>
                </TouchableOpacity>
             </View>
             <View style={styles.signup}>
-               <TouchableOpacity onPress={() => navigation.navigate('Register' as never)}>
+               <TouchableOpacity onPress={goToRegister}>
                   <Text style={styles.textRegister}>Register Now!</Text>
                </TouchableOpacity>
-            </View>
+            </View> */}
+            {/* </View> */}
+            <FormLogin
+               goToRegister={goToRegister}
+               handleChangePassword={handleChangePassword}
+               handleChangeUsername={handleChangeUsername}
+               handleSignIn={handleSignIn}
+            />
             <View style={styles.logingg}>
                {/* <GoogleLogin
                size='medium'
@@ -167,96 +163,3 @@ const LoginPage = observer(({}) => {
 });
 
 export default LoginPage;
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   mainView: {
-      zIndex: 1,
-      flex: 1,
-      position: 'absolute',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-      height: '70%',
-      top: '30%',
-      backgroundColor: 'white',
-      borderTopLeftRadius: 50,
-   },
-   logoBanner: {
-      zIndex: -1,
-      resizeMode: 'cover',
-      height: '100%',
-   },
-   textInput: {
-      backgroundColor: 'none',
-      padding: 10,
-      width: 250,
-      marginHorizontal: 6,
-   },
-   passwordInputWrap: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      textAlign: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 8,
-      paddingVertical: 8,
-      marginVertical: 8,
-      borderWidth: 1,
-      borderColor: 'gray',
-      borderRadius: 12,
-      width: 300,
-   },
-   textInputPw: {
-      backgroundColor: 'none',
-      padding: 10,
-      width: 250,
-      marginHorizontal: 6,
-   },
-   textLogin: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-   },
-   logo: {
-      width: 100,
-      height: 100,
-   },
-   buttonWrap: {
-      width: 300,
-      height: 50,
-      borderRadius: 10,
-      verticalAlign: 'auto',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      color: 'white',
-      backgroundColor: 'black',
-   },
-   button: {
-      fontSize: 16,
-      color: 'white',
-   },
-   signup: {
-      width: 200,
-      height: 50,
-      borderRadius: 10,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      color: 'black',
-   },
-   textRegister: {
-      color: 'black',
-      fontSize: 16,
-      fontWeight: 'bold',
-   },
-   logingg: {
-      width: 100,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-});

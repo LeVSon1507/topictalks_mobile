@@ -10,7 +10,20 @@ import { IPost } from '../../../../utils';
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
 
-const tabs = ['Community Post', 'Friends Post', 'My Post'];
+const tabs = [
+   {
+      iconName: 'chatbox-outline',
+      name: 'Community Post',
+   },
+   {
+      iconName: 'person-outline',
+      name: 'Friends Post',
+   },
+   {
+      iconName: 'people-outline',
+      name: 'My Post',
+   },
+];
 
 const PostScreen = observer(() => {
    const navigation = useNavigation();
@@ -78,7 +91,8 @@ const PostScreen = observer(() => {
                   style={[styles.tabWrap, tabView === index && { backgroundColor: '#C67C4E' }]}
                   onPress={() => handleChangeTab(index)}
                >
-                  <Text style={styles.tabText}>{tab}</Text>
+                  <Ionicons name={tab.iconName} size={16} color={'white'} />
+                  <Text style={styles.tabText}>{tab.name}</Text>
                </TouchableOpacity>
             ))}
          </View>
@@ -174,12 +188,17 @@ const styles = StyleSheet.create({
    },
    tabWrap: {
       backgroundColor: '#313131',
-      padding: 16,
-      margin: 8,
+      flexDirection: 'row',
+      paddingVertical: 16,
+      paddingHorizontal: 6,
+      justifyContent: 'center',
+      marginVertical: 8,
+      marginHorizontal: 4,
       borderRadius: 12,
    },
    tabText: {
       color: 'white',
+      paddingLeft: 4,
       fontWeight: '600',
    },
    titleWrap: {

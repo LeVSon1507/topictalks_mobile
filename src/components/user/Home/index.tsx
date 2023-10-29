@@ -38,10 +38,9 @@ const HomeScreen = () => {
             headerShown: false,
          })}
       >
-         <Tab.Screen name='Post' component={PostScreen} />
-         <Tab.Screen name='Message' component={ContainerMessage} />
          <Tab.Screen name='Topic' component={Topic} />
-         <Tab.Screen name='Group' component={UserHome} />
+         <Tab.Screen name='Message' component={ContainerMessage} />
+         <Tab.Screen name='Post' component={PostScreen} />
          <Tab.Screen name='Profile' component={UserHome} />
          <Tab.Screen name='Contact Us' component={UserHome} />
       </Tab.Navigator>

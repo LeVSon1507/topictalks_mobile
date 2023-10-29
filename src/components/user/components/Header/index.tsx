@@ -1,9 +1,8 @@
 import { StyleSheet, TouchableOpacity, Text, View, Image, Modal } from 'react-native';
 import React, { useState } from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import LogoutModal from '../../Home/Topic/LogoutModal';
 import { useNavigation } from '@react-navigation/native';
-import { HamburgerIcon, Menu, Pressable } from 'native-base';
+import { Menu, Pressable } from 'native-base';
 
 export const avatarUrlDemo =
    'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=';

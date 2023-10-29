@@ -57,7 +57,7 @@ const PostDetailScreen = observer(({}) => {
                   </View>
                   <View style={styles.iconGroupWrap}>
                      <TouchableOpacity onPress={handleLike}>
-                        <Ionicons name={'heart-outline'} size={25} />
+                        <Ionicons name={'heart-circle-outline'} size={25} />
                      </TouchableOpacity>
                      <TouchableOpacity onPress={handleComment}>
                         <Ionicons name={'chatbubbles-outline'} size={25} />
@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
       width: '80%',
       borderTopRightRadius: 32,
       borderBottomLeftRadius: 32,
-      height: 150,
+      height: 400,
+      resizeMode: 'contain',
    },
    //============
    container: {
