@@ -2,10 +2,10 @@ import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView } from 'rea
 import React, { useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from '../../../../store/accountStore';
-import HeaderBar, { avatarUrlDemo } from '../../components/Header';
+import HeaderBar from '../../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
-import { IPost } from '../../../../utils';
+import { AVATAR_FAKE, IPost } from '../../../../utils';
 import dayjs from 'dayjs';
 import { fakePostData } from '../Post/data';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -36,7 +36,7 @@ const PostDetailScreen = observer(({}) => {
                <View style={styles.postHeaderWrap}>
                   <View style={styles.userNameWrap}>
                      <Image
-                        source={{ uri: item?.avatar_url || avatarUrlDemo }}
+                        source={{ uri: item?.avatar_url || AVATAR_FAKE }}
                         alt='avatar'
                         style={[styles.imageUserStyle, { borderRadius: 50 }]}
                      />
@@ -55,6 +55,13 @@ const PostDetailScreen = observer(({}) => {
                         }}
                      />
                   </View>
+                  {item?.like && (
+                     <View style={{ paddingHorizontal: 4, paddingVertical: 8 }}>
+                        <Text style={{ fontSize: 14, fontWeight: '600' }}>
+                           {item?.like?.totalLike} likes
+                        </Text>
+                     </View>
+                  )}
                   <View style={styles.iconGroupWrap}>
                      <TouchableOpacity onPress={handleLike}>
                         <Ionicons name={'heart-circle-outline'} size={25} />
@@ -68,6 +75,13 @@ const PostDetailScreen = observer(({}) => {
                   </View>
                   <Text style={styles.itemTitle}>{item?.title}</Text>
                   <Text style={styles.itemContent}>{item?.content}</Text>
+                  {
+                     <View style={{}}>
+                        <Text style={{ fontSize: 12, fontWeight: '700' }}>
+                           {item?.totalComment} comments
+                        </Text>
+                     </View>
+                  }
                </View>
             </View>
          </View>

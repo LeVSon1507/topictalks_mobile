@@ -2,11 +2,11 @@ import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView } from 'rea
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from '../../../../store/accountStore';
-import HeaderBar, { avatarUrlDemo } from '../../components/Header';
+import HeaderBar from '../../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
 import { fakePostData } from './data';
-import { IPost, createAxios, getDataAPI } from '../../../../utils';
+import { AVATAR_FAKE, IPost, createAxios, getDataAPI } from '../../../../utils';
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
 import friendStore from '../../../../store/friendStore';
@@ -34,6 +34,7 @@ interface PostProps {
 
 const PostScreen = observer((props: PostProps) => {
    const { handleDetailPost } = props;
+   const [postsDT, setPostDT] = useState([]);
 
    const posts = postItemStore?.posts;
    const account = accountStore?.account;
@@ -70,6 +71,7 @@ const PostScreen = observer((props: PostProps) => {
       getDataAPI(`${`post/all-posts/is-approved=${true}`}`, account.access_token, axiosJWT)
          .then(res => {
             postItemStore?.setPosts(res.data.data);
+            setPostDT(res.data.data);
             uiStore?.setLoading(false);
          })
          .catch(err => {
@@ -79,16 +81,16 @@ const PostScreen = observer((props: PostProps) => {
 
    const navigation = useNavigation();
 
-   const postApproves = posts?.filter(item => {
+   const postApproves = postsDT?.filter(item => {
       const isFriend = friendStore?.friends?.some(
          friend =>
             (friend.friendId === item?.author_id || friend?.userid === item?.author_id) &&
-            friend.accept
+            friend?.accept
       );
       return (
-         item.status === 1 ||
-         (item.status === 2 && isFriend) ||
-         accountStore?.account.id === item.author_id
+         item?.status === 1 ||
+         (item?.status === 2 && isFriend) ||
+         accountStore?.account.id === item?.author_id
       );
    });
 
@@ -111,7 +113,7 @@ const PostScreen = observer((props: PostProps) => {
                   <View style={styles.postHeaderWrap}>
                      <View style={styles.userNameWrap}>
                         <Image
-                           source={{ uri: item?.avatar_url || avatarUrlDemo }}
+                           source={{ uri: item?.avatar_url || AVATAR_FAKE }}
                            alt='avatar'
                            style={[styles.imageUserStyle, { borderRadius: 50 }]}
                         />
@@ -165,7 +167,7 @@ const PostScreen = observer((props: PostProps) => {
          </TouchableOpacity>
          {/* Post Content */}
          <FlatList
-            data={postApproves}
+            data={postsDT}
             renderItem={({ item }) => renderItem(item)}
             keyExtractor={item => item?.username}
          />

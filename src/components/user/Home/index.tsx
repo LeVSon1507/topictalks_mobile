@@ -8,6 +8,8 @@ import Message from './Message';
 import { MaterialIcons } from '@expo/vector-icons';
 import ContainerMessage from './Message/container';
 import PostScreen from './Post';
+import Profile from './Profile';
+import ContactUs from './ContactUs';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,8 +43,8 @@ const HomeScreen = () => {
          <Tab.Screen name='Topic' component={Topic} />
          <Tab.Screen name='Message' component={ContainerMessage} />
          <Tab.Screen name='Post' component={PostScreen} />
-         <Tab.Screen name='Profile' component={UserHome} />
-         <Tab.Screen name='Contact Us' component={UserHome} />
+         <Tab.Screen name='Profile' component={Profile} />
+         <Tab.Screen name='Contact Us' component={ContactUs} />
       </Tab.Navigator>
    );
 };
