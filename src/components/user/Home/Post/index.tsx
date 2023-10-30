@@ -1,14 +1,17 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from '../../../../store/accountStore';
 import HeaderBar, { avatarUrlDemo } from '../../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
 import { fakePostData } from './data';
-import { IPost } from '../../../../utils';
+import { IPost, createAxios, getDataAPI } from '../../../../utils';
 import dayjs from 'dayjs';
 import { useNavigation } from '@react-navigation/native';
+import friendStore from '../../../../store/friendStore';
+import uiStore from '../../../../store/uiStore';
+import postItemStore from '../../../../store/postStore';
 
 const tabs = [
    {
@@ -24,11 +27,70 @@ const tabs = [
       name: 'My Post',
    },
 ];
+interface PostProps {
+   posts?: IPost[];
+   handleDetailPost: (id: number) => void;
+}
 
-const PostScreen = observer(() => {
+const PostScreen = observer((props: PostProps) => {
+   const { handleDetailPost } = props;
+
+   const posts = postItemStore?.posts;
+   const account = accountStore?.account;
+   const setAccount = () => {
+      return accountStore?.setAccount;
+   };
+
+   const accountJwt = account;
+   const axiosJWT = createAxios(accountJwt, setAccount);
+
+   //TODO: post by topic
+   // useEffect(() => {
+   //    uiStore?.setLoading(true);
+   //    getDataAPI(
+   //       `${
+   //          selectTopic === 0
+   //             ? `post/all-posts/is-approved=${true}`
+   //             : `/post/all-posts/tpid=${selectTopic}`
+   //       }`,
+   //       account.access_token,
+   //       axiosJWT
+   //    )
+   //       .then(res => {
+   //          postItemStore?.setPosts(res.data.data);
+   //          uiStore?.setLoading(false);
+   //       })
+   //       .catch(err => {
+   //          console.log(err);
+   //       });
+   // }, [selectTopic]);
+
+   useEffect(() => {
+      uiStore?.setLoading(true);
+      getDataAPI(`${`post/all-posts/is-approved=${true}`}`, account.access_token, axiosJWT)
+         .then(res => {
+            postItemStore?.setPosts(res.data.data);
+            uiStore?.setLoading(false);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+   }, []);
+
    const navigation = useNavigation();
 
-   const account = accountStore.account;
+   const postApproves = posts?.filter(item => {
+      const isFriend = friendStore?.friends?.some(
+         friend =>
+            (friend.friendId === item?.author_id || friend?.userid === item?.author_id) &&
+            friend.accept
+      );
+      return (
+         item.status === 1 ||
+         (item.status === 2 && isFriend) ||
+         accountStore?.account.id === item.author_id
+      );
+   });
 
    const [tabView, setTabView] = useState(0);
 
@@ -37,6 +99,7 @@ const PostScreen = observer(() => {
    };
 
    const goToPostDetail = (item: IPost): void => {
+      // @ts-ignore: Unreachable code error
       navigation.navigate('PostDetail', { postData: item });
    };
 
@@ -102,7 +165,7 @@ const PostScreen = observer(() => {
          </TouchableOpacity>
          {/* Post Content */}
          <FlatList
-            data={fakePostData}
+            data={postApproves}
             renderItem={({ item }) => renderItem(item)}
             keyExtractor={item => item?.username}
          />

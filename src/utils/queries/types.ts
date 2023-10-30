@@ -63,6 +63,7 @@ export interface IPost {
    avatar_url: string;
    username: string;
    author_id: number;
+   status: number;
    created_at: string;
    updated_at: string;
    approved: boolean;
